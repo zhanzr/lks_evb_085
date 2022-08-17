@@ -41,15 +41,38 @@ int stdout_putchar(int ch) {
   return ch;
 }
 
-const uint32_t test_code_array[] = {
-    0x0000f11c, 0x0000792b, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x0000b145,
-    0x0000b186, 0x0000e000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000};
+const uint32_t test_code_arctan_simple[] = {
+0x0000f01c,
+0x0000792b,
+0x00000000,
+0x00000000,
+0x00000000,
+0x00000000,
+0x00000000,
+0x00000000,
+0x00000000,
+0x00000000,
+0x00000000,
+0x00000000,
+0x00000000,
+0x00000000,
+0x00000000,
+0x00000000,
+0x00000000,
+0x0000b145,
+0x0000b186,
+0x0000e000,
+0x00000000,
+0x00000000,
+0x00000000,
+0x00000000,
 
-const uint32_t test_data_array[] = {0x00000000, 0x00000000, 0x00000000,
-                                    0x00000000, 0x10001000, 0x00000000,
-                                    0x00000000};
+};
+
+const uint32_t test_data_arctan_simple[] = {
+0x10001BB6,
+0x00000000,
+};
 
 int main(void) {
   volatile uint32_t tmp_ticks;
@@ -70,13 +93,12 @@ int main(void) {
     tmp_ticks = g_ticks;
     arctan_input input;
     input.x = 0x1000;
-    input.y = 0x1000;
+    input.y = 0x1BB6;
     arctan_res = cpu_issue_arctan_mod(input);
     delta_ticks = g_ticks - tmp_ticks;
 
-    printf("%04X, %04X\n", arctan_res.arctan, arctan_res.mod);
-
     printf("DSP as a periph delta:%u\n", delta_ticks);
+    printf("%04X, %04X\n", arctan_res.arctan, arctan_res.mod);
 
     printf("\n");
     printf("%s\n", __VERSION__);
@@ -85,27 +107,26 @@ int main(void) {
     // DSP as standalone
     tmp_ticks = g_ticks;
     arctan_res = dsp_issue_arctan_mod_poll(
-        test_code_array, sizeof(test_code_array) / sizeof(test_code_array[0]),
-        test_data_array, sizeof(test_data_array) / sizeof(test_data_array[0]));
+        test_code_arctan_simple, sizeof(test_code_arctan_simple) / sizeof(test_code_arctan_simple[0]),
+        test_data_arctan_simple, sizeof(test_data_arctan_simple) / sizeof(test_data_arctan_simple[0]));
 
     delta_ticks = g_ticks - tmp_ticks;
 
-    printf("%04X, %04X\n", arctan_res.arctan, arctan_res.mod);
-
     printf("DSP standalone delta:%u\n", delta_ticks);
+    printf("%04X, %04X\n", arctan_res.arctan, arctan_res.mod);
 
     printf("\n");
     printf("%s\n", __VERSION__);
     printf("\n");
 
     tmp_ticks = g_ticks;
-    while (400 > (g_ticks - tmp_ticks)) {
+    while (300 > (g_ticks - tmp_ticks)) {
       __WFI();
     }
     Invers_GPIO(GPIO2, GPIO_Pin_8);
 
     tmp_ticks = g_ticks;
-    while (400 > (g_ticks - tmp_ticks)) {
+    while (300 > (g_ticks - tmp_ticks)) {
       __WFI();
     }
     Invers_GPIO(GPIO3, GPIO_Pin_9);

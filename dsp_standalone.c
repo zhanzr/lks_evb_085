@@ -40,19 +40,30 @@ arctan_result dsp_issue_arctan_mod_poll(const uint32_t *code_ptr,
     REG32(DSP_CODE_MEM_BASE + i * 4) = code_ptr[i];
   }
 
-  i = 1;
-  while (i--) {
-    // [1] dsp_paused, write 0 to start dsp
-    // [0] irq write 1 to clear
-    DSP_SC = BIT0; // Start DSP
-    // wait until irq set and dsp paused
-    while ((BIT0 | BIT1) != (DSP_SC & (BIT0 | BIT1)))
-      ;
-  }
+	// Pause DSP
+	DSP_SC |= BIT1;
+	// Reset DSP PC
+	DSP_SC |= BIT2;
+	// Clear the IRQ flag
+	DSP_SC |= BIT0;
 
+	// Start DSP
+	DSP_SC = BIT0;
+	
+	// wait until irq set and dsp paused
+	while ((BIT0) != (DSP_SC & (BIT0))) {
+      __WFI();
+	}
+	
   arctan_result res;
-  res.arctan = DSP_CORDIC_ARCTAN;
-  res.mod = DSP_CORDIC_MOD;
+  res.arctan = REG32(DSP_DATA_MEM_BASE + 5 * 4);
+  res.mod = REG32(DSP_DATA_MEM_BASE + 6 * 4);
 
+//	printf("%04X %04X\n", DSP_CORDIC_ARCTAN, DSP_CORDIC_MOD);
+//	
+//	for(uint32_t j=0; j<16; ++j) {
+//		printf("%08X:\t%08X\n", DSP_DATA_MEM_BASE + j*4, REG32(DSP_DATA_MEM_BASE + j*4));
+//	}
+	
   return res;
 }
