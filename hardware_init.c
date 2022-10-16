@@ -98,6 +98,13 @@ void GPIO_init(void) {
   GPIO_InitStruct.GPIO_Pin = GPIO_Pin_9;
   GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
   GPIO_Init(GPIO3, &GPIO_InitStruct);
+	
+	//≈‰÷√LED3£∫P2.9
+  GPIO_StructInit(&GPIO_InitStruct);
+  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
+  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_9;
+  GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+  GPIO_Init(GPIO2, &GPIO_InitStruct);
 }
 
 /*******************************************************************************
