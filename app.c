@@ -50,12 +50,13 @@ int main(void) {
       __WFI();
     }
     Invers_GPIO(GPIO2, GPIO_Pin_8);
+    Invers_GPIO(GPIO3, GPIO_Pin_9);
 
     tmp_ticks = g_ticks;
     while (500 > (g_ticks - tmp_ticks)) {
       __WFI();
     }
-    Invers_GPIO(GPIO3, GPIO_Pin_9);
+    Invers_GPIO(GPIO2, GPIO_Pin_9);
   }
 }
 
